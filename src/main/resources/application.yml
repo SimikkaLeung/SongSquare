@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: api
+
+  config:
+    import: "optional:file:.env[.properties]"
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db-changelog-master.xml
+    enabled: true
+    parameters:
+      dbUser: ${DB_USERNAME}
+
+app:
+  jwt:
+    # 256-bit base64 string
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000 # 24 hours in milliseconds
+    
+logging:
+  level:
+    root: INFO
+    '[com.songsquare.api]': DEBUG  # Enable debug logs for your application package
+    '[org.hibernate.SQL]': DEBUG  # Log SQL queries (optional)
+    '[org.hibernate.orm.connections.pooling]': WARN
+  file:
+    name: logs/songsquare-api.log  # Relative path from project root
+  logback:
+    rollingpolicy:
+      file-name-pattern: "logs/archived/songsquare-api-%d{yyyy-MM-dd}.%i.log"
+      max-file-size: 10MB      # Rotate to a new file when it hits 10MB
+      max-history: 30          # Keep logs for 30 days before deleting
+      total-size-cap: 3GB      # Maximum total size of all archived logs

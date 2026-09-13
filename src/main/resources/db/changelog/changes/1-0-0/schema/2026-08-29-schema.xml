@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:secure="http://www.liquibase.org/xml/ns/secure"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/secure
+        http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
+
+    <changeSet id="c2026-08-29-1-seq" author="ssdev">
+        <createSequence sequenceName="ss_user_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="2026-08-29-2-tab" author="ssdev">
+        <createTable tableName="ss_users">
+            <column name="id" type="BIGINT" defaultValueComputed="nextval('ss_user_seq')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="display_name" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
