@@ -11,7 +11,7 @@
         http://www.liquibase.org/xml/ns/secure
         http://www.liquibase.org/xml/ns/secure/liquibase-secure-latest.xsd">
 
-    <changeSet id="c2026-08-29-1-seq" author="ssdev">
+    <changeSet id="2026-08-29-1-seq" author="ssdev">
         <createSequence sequenceName="ss_user_seq" startValue="1" incrementBy="1"/>
     </changeSet>
 
@@ -33,4 +33,15 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="2026-09-26-3-col" author="ssdev">
+        <modifyDataType tableName="ss_users" 
+                        columnName="email" 
+                        newDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="2026-09-27-4-col" author="ssdev">
+        <modifyDataType tableName="ss_users" 
+                        columnName="password" 
+                        newDataType="varchar(255)"/>
+    </changeSet>
 </databaseChangeLog>

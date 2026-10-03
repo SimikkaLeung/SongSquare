@@ -21,6 +21,11 @@ spring:
     enabled: true
     parameters:
       dbUser: ${DB_USERNAME}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/songsquare
 
 app:
   jwt:

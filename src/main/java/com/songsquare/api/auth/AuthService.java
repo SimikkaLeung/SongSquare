@@ -3,9 +3,12 @@ package com.songsquare.api.auth;
 import com.songsquare.api.auth.dto.AuthResponse;
 import com.songsquare.api.auth.dto.LoginRequest;
 import com.songsquare.api.auth.dto.RegisterRequest;
+import com.songsquare.api.exceptions.AuthenticationException;
 import com.songsquare.api.security.JwtTokenProvider;
 import com.songsquare.api.user.UserEntity;
 import com.songsquare.api.user.UserRepository;
+import com.songsquare.util.ObjectComparator;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,13 +23,13 @@ public class AuthService {
     private final JwtTokenProvider tokenProvider;
 
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) throws AuthenticationException{
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken!");
+            throw new AuthenticationException("Username is already taken!");
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email is already registered!");
+            throw new AuthenticationException("Email is already registered!");
         }
 
         UserEntity user = new UserEntity();
@@ -47,12 +50,23 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) throws AuthenticationException{
+
+        if (request == null || ObjectComparator.isNullOrEmpty(request.getUsernameOrEmail(),true)
+             || ObjectComparator.isNullOrEmpty(request.getPassword(),true) ) {
+            throw new AuthenticationException("Please input a username or email and a password.");
+        } 
 
         String token = tokenProvider.generateToken(request.getUsernameOrEmail());
         UserEntity user = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AuthenticationException("User not found"));
 
+        boolean isMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        if (!isMatch) {
+            throw new AuthenticationException("Wrong Password!");
+        } 
+        
         return AuthResponse.builder()
                 .accessToken(token)
                 .tokenType("Bearer")

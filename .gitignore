@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .env
+.mvnw
 
 # Logging files
 /logs/
@@ -39,3 +40,4 @@ build/
 
 ## Mac ###
 .DS_Store
+mvnw.cmd

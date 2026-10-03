@@ -15,4 +15,5 @@ public class AuthResponse {
     private Long expiresIn;
     private String username;
     private String email;
+    
 }
